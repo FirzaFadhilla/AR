@@ -7,10 +7,10 @@
 </style></head><body>
 <video id="cameraFeed" autoplay muted playsinline webkit-playsinline aria-label="Video kamera belakang"></video>
 <div id="viewport"></div>
-<div id="overlay"><header class="top"><div class="brand"><div class="mark">✈</div><div><b>SKYPORT</b><small>AIRPORT FLIGHT SIMULATOR</small></div></div><div class="actions"><button class="btn accent" id="chooseBtn">✈ Pilih Pesawat / Bandara</button><button class="btn" id="soundBtn" aria-pressed="false">🔇 Suara OFF</button><button class="btn" id="rearCameraBtn" aria-pressed="false">📷 Kamera Belakang</button><button class="btn" id="cameraBtn">🎥 Sudut Kamera</button><button class="btn" id="flipBtn">↻ Balik Pesawat</button><button class="btn" id="resetBtn">↻ Reset</button><a class="btn" href="ar.html" style="text-decoration:none">▣ Mode AR</a></div></header>
+<div id="overlay"><header class="top"><div class="brand"><div class="mark">✈</div><div><b>SKYPORT</b><small>AIRPORT FLIGHT SIMULATOR</small></div></div><div class="actions"><button class="btn accent" id="chooseBtn">✈ Pilih Pesawat / Bandara</button><button class="btn" id="soundBtn" aria-pressed="false">🔇 Suara OFF</button><button class="btn" id="rearCameraBtn" aria-pressed="false">📷 Kamera Belakang</button><button class="btn" id="airportOverlayBtn" aria-pressed="true">🏢 Bandara 3D ON</button><button class="btn" id="cameraBtn">🎥 Sudut Kamera</button><button class="btn" id="flipBtn">↻ Balik Pesawat</button><button class="btn" id="resetBtn">↻ Reset</button><a class="btn" href="ar.html" style="text-decoration:none">▣ Mode AR</a></div></header>
 <section class="stats"><div class="stat"><em>KECEPATAN</em><b id="speed">0 <span>km/j</span></b></div><div class="stat"><em>KETINGGIAN</em><b id="altitude">0 <span>m</span></b></div><div class="stat"><em>STATUS</em><b class="landed" id="status">PARKIR</b></div><div class="stat"><em>ARAH</em><b id="heading">000°</b></div></section><div class="msg" id="message">Naikkan throttle, arahkan joystick ke atas saat sudah cepat, lalu terbang!</div><div class="mobile-guide">Joystick: kiri/kanan membelok • atas: naik / angkat hidung • bawah: turun</div>
 <div class="bottom"><div><div class="joystick-zone" id="joy"><div class="knob" id="knob">✚</div></div><div class="control-label">FLIGHT STICK</div></div><div class="right-controls"><div class="panel throttle"><label>THROTTLE</label><strong id="throttleVal">0%</strong><input id="throttle" type="range" min="0" max="100" value="0" step="1" orient="vertical"></div><div class="flight-buttons"><button id="takeoffBtn" class="btn primary">✈ TAKE OFF</button><button id="brakeBtn" class="btn">⛔ REM</button><button id="downBtn" class="btn">↓ TURUN</button></div></div></div><div class="hint">PC: W/S = naik/turun • A/D = belok • ↑/↓ = throttle • C = kamera • R = reset</div></div>
-<div id="chooser" class="loading" style="z-index:40"><div class="box" style="text-align:left;max-width:580px"><div style="font-size:11px;letter-spacing:3px;color:#9ee6fa">PILIH SEBELUM TERBANG</div><h1 style="font-size:44px">SKYPORT</h1><p>Saat Mulai, kamera belakang HP akan diminta izin dan digunakan sebagai latar. Pesawat melayang di atas gambar kamera; joystick tetap aktif. Jika kamera ditolak, simulator 3D tetap berjalan. Pilihan bandara berlaku pada mode 3D biasa.</p><label class="picker-label" for="aircraftSelect">KENDARAAN UDARA</label><select id="aircraftSelect" class="picker"><option value="plane">Pesawat original</option><option value="fighter">KF-21A Boramae — Jet Tempur</option><option value="heli">AH-1W SuperCobra — Helikopter</option></select><label class="picker-label" for="airportSelect">BANDARA</label><select id="airportSelect" class="picker"><option value="classic">Airport Pack — Bandara Original</option><option value="sunset">Sunshine Airport — Bandara Sunset</option></select><p id="selectionNote" style="min-height:25px">Pilih kendaraan dan bandara, lalu tekan Mulai.</p><button class="btn accent" id="startSelection" style="width:100%;font-size:15px;padding:15px">▶ MULAI DENGAN KAMERA BELAKANG</button></div></div>
+<div id="chooser" class="loading" style="z-index:40"><div class="box" style="text-align:left;max-width:580px"><div style="font-size:11px;letter-spacing:3px;color:#9ee6fa">PILIH SEBELUM TERBANG</div><h1 style="font-size:44px">SKYPORT</h1><p>Saat Mulai, kamera belakang HP akan menjadi latar. Ketiga pesawat dan kedua bandara dapat dipilih. Bandara 3D ditampilkan transparan di atas kamera; gunakan tombol Bandara 3D untuk menyembunyikannya jika ingin melihat kamera sepenuhnya. Ini overlay kamera, belum AR pelacakan permukaan.</p><label class="picker-label" for="aircraftSelect">KENDARAAN UDARA</label><select id="aircraftSelect" class="picker"><option value="plane">Pesawat original</option><option value="fighter">KF-21A Boramae — Jet Tempur</option><option value="heli">AH-1W SuperCobra — Helikopter</option></select><label class="picker-label" for="airportSelect">BANDARA</label><select id="airportSelect" class="picker"><option value="classic">Airport Pack — Bandara Original</option><option value="sunset">Sunshine Airport — Bandara Sunset</option></select><p id="selectionNote" style="min-height:25px">Pilih kendaraan dan bandara, lalu tekan Mulai.</p><button class="btn accent" id="startSelection" style="width:100%;font-size:15px;padding:15px">▶ MULAI DENGAN KAMERA BELAKANG</button></div></div>
 <div id="loading" class="loading hidden"><div class="box"><h1>SKYPORT</h1><p>Jelajahi bandara dan terbangkan pesawat dari landasan. Versi simulasi 3D — kontrol penerbangan disederhanakan untuk tugas kuliah.</p><div class="bar"><div id="progress"></div></div><div id="loadnote" class="loadnote">Memuat bandara dan pesawat 3D...</div><button id="retry" class="btn hidden">Coba lagi</button></div></div>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"}}</script><script type="module">
 import * as THREE from 'three';
@@ -28,6 +28,31 @@ let activeAircraft='plane',activeAirport='classic',rotors=[],loadingBusy=false,s
 // Ini bukan pelacakan posisi dunia nyata / SLAM; model tetap mengikuti kamera virtual simulator.
 const cameraFeed=el('cameraFeed');
 let cameraStream=null, cameraBackground=false, savedBackground=null, savedFog=null;
+let showAirportOnCamera=true;
+function syncAirportVisual(){
+ if(airportGroup){
+  airportGroup.visible=!cameraBackground || showAirportOnCamera;
+  airportGroup.traverse(o=>{
+   if(!o.isMesh || /COLLIDERS/i.test(o.name))return;
+   for(const material of (Array.isArray(o.material)?o.material:[o.material])){
+    if(!material)continue;
+    if(material.userData.skyportOriginalOpacity===undefined){material.userData.skyportOriginalOpacity=material.opacity;material.userData.skyportOriginalTransparent=material.transparent;material.userData.skyportOriginalDepthWrite=material.depthWrite;}
+    const transparentOverlay=cameraBackground && showAirportOnCamera;
+    material.opacity=transparentOverlay?Math.min(.65,material.userData.skyportOriginalOpacity):material.userData.skyportOriginalOpacity;
+    material.transparent=transparentOverlay || material.userData.skyportOriginalTransparent;
+    material.depthWrite=transparentOverlay?false:material.userData.skyportOriginalDepthWrite;
+    material.needsUpdate=true;
+   }
+  });
+ }
+ el('airportOverlayBtn').textContent=showAirportOnCamera?'🏢 Bandara 3D ON':'🏢 Bandara 3D OFF';
+ el('airportOverlayBtn').setAttribute('aria-pressed',String(showAirportOnCamera));
+}
+el('airportOverlayBtn').addEventListener('click',()=>{
+ showAirportOnCamera=!showAirportOnCamera;
+ syncAirportVisual();
+ show(showAirportOnCamera?'Bandara 3D ditampilkan di atas kamera.':'Bandara 3D disembunyikan; pesawat tetap tampil di atas kamera.');
+});
 async function startRearCamera(){
  if(cameraBackground)return true;
  if(!navigator.mediaDevices?.getUserMedia){show('Kamera tidak tersedia. Buka melalui HTTPS GitHub Pages di HP.');return false;}
@@ -42,10 +67,10 @@ async function startRearCamera(){
   scene.background=null;scene.fog=null;
   renderer.setClearColor(0x000000,0);
   terrain.visible=false;grid.visible=false;
-  if(airportGroup)airportGroup.visible=false;
+  syncAirportVisual();
   el('rearCameraBtn').textContent='📷 Kamera ON · Matikan';
   el('rearCameraBtn').setAttribute('aria-pressed','true');
-  show('Kamera belakang aktif. Pesawat 3D tampil di atas gambar kamera. Joystick tetap bisa digunakan.');
+  show('Kamera belakang aktif untuk semua pilihan pesawat dan bandara. Gunakan Bandara 3D ON/OFF untuk mengatur tampilannya.');
   return true;
  }catch(err){
   if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
@@ -63,10 +88,10 @@ function stopRearCamera(){
  scene.fog=savedFog || new THREE.FogExp2(activeAirport==='sunset'?0xf3b081:0x9bcbe6,.00065);
  renderer.setClearColor(0x000000,1);
  terrain.visible=true;grid.visible=true;
- if(airportGroup)airportGroup.visible=true;
+ syncAirportVisual();
  el('rearCameraBtn').textContent='📷 Kamera Belakang';
  el('rearCameraBtn').setAttribute('aria-pressed','false');
- show('Kamera belakang dimatikan. Kembali ke latar bandara 3D.');
+ show('Kamera belakang dimatikan. Kembali ke bandara 3D pilihanmu.');
 }
 el('rearCameraBtn').addEventListener('click',()=>cameraBackground?stopRearCamera():startRearCamera());
 window.addEventListener('pagehide',()=>{if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());});
@@ -158,9 +183,9 @@ async function applySelection(){
   progress(8,'Memuat bandara '+AIRPORTS[activeAirport].name+'...');
   const airport=await loadGlb('./assets/'+AIRPORTS[activeAirport].file);
   airportGroup=airport.scene;
-  airportGroup.traverse(o=>{if(o.isMesh){if(/COLLIDERS/i.test(o.name))o.visible=false;else{o.material.side=THREE.DoubleSide;o.frustumCulled=false;}}});
+  airportGroup.traverse(o=>{if(o.isMesh){if(/COLLIDERS/i.test(o.name))o.visible=false;else{for(const m of (Array.isArray(o.material)?o.material:[o.material]))if(m)m.side=THREE.DoubleSide;o.frustumCulled=false;}}});
   scene.add(airportGroup);airportLoaded=true;
-  if(cameraBackground)airportGroup.visible=false;
+  syncAirportVisual();
   // Buat warna/fog baru agar tidak memanggil .set() pada null saat kamera aktif.
   const skyColor=activeAirport==='sunset'?0xf3b081:0x9bcbe6;
   const nextBackground=new THREE.Color(skyColor);
@@ -190,7 +215,7 @@ async function applySelection(){
  finally{loadingBusy=false;}
 }
 el('startSelection').onclick=async()=>{if(!cameraBackground)await startRearCamera();await applySelection();};
-el('chooseBtn').onclick=()=>{if(loadingBusy)return;el('chooser').classList.remove('hidden');show('Pilih pesawat dan bandara baru, lalu tekan MULAI SIMULATOR.');};
+el('chooseBtn').onclick=()=>{if(loadingBusy)return;el('chooser').classList.remove('hidden');show('Pilih pesawat dan bandara baru, lalu tekan MULAI DENGAN KAMERA BELAKANG.');};
 el('retry').onclick=()=>location.reload();
 function reset(){const start=AIRPORTS[activeAirport].start;Object.assign(STATE,{...start,speed:0,throttle:0,vSpeed:0,pitch:0,bank:0,airborne:false,assisted:false});el('throttle').value=0;el('throttleVal').textContent='0%';planeHolder.position.set(STATE.x,STATE.y,STATE.z);planeHolder.rotation.set(0,0,0);show('Pesawat siap di landasan. Tekan TAKE OFF atau naikkan throttle.');}
 el('flipBtn').onclick=()=>{planePivot.rotation.y=(planePivot.rotation.y===0?Math.PI:0);show('Orientasi pesawat dibalik 180°. Coba gerakkan throttle untuk memeriksa arahnya.');};el('resetBtn').onclick=reset;el('cameraBtn').onclick=()=>{STATE.mode=(STATE.mode+1)%3;show(['Kamera: dari belakang','Kamera: kokpit','Kamera: jarak jauh'][STATE.mode]);};el('takeoffBtn').onclick=()=>{STATE.assisted=true;STATE.throttle=1;el('throttle').value=100;el('throttleVal').textContent='100%';show('Takeoff assist aktif: pesawat mulai melaju dan akan naik setelah cukup cepat.');};el('throttle').addEventListener('input',e=>{STATE.throttle=Number(e.target.value)/100;STATE.assisted=false;el('throttleVal').textContent=e.target.value+'%';});
