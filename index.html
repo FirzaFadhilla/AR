@@ -161,16 +161,21 @@ async function applySelection(){
   airportGroup.traverse(o=>{if(o.isMesh){if(/COLLIDERS/i.test(o.name))o.visible=false;else{o.material.side=THREE.DoubleSide;o.frustumCulled=false;}}});
   scene.add(airportGroup);airportLoaded=true;
   if(cameraBackground)airportGroup.visible=false;
-  if(activeAirport==='sunset'){
-    scene.background=new THREE.Color(0xf3b081);scene.fog.color.set(0xf3b081);
-    sun.color.set(0xffc88b);sun.intensity=3.2;
-    terrain.position.y=13.5;grid.position.y=13.6;
-  }else{
-    scene.background.set(0x9bcbe6);scene.fog.color.set(0x9bcbe6);
-    sun.color.set(0xfff2d6);sun.intensity=2.7;
-    terrain.position.y=-.7;grid.position.y=-.4;
-  }
-  if(cameraBackground){savedBackground=scene.background;savedFog=scene.fog;scene.background=null;scene.fog=null;terrain.visible=false;grid.visible=false;}
+  // Buat warna/fog baru agar tidak memanggil .set() pada null saat kamera aktif.
+  const skyColor=activeAirport==='sunset'?0xf3b081:0x9bcbe6;
+  const nextBackground=new THREE.Color(skyColor);
+  const nextFog=new THREE.FogExp2(skyColor,.00065);
+  sun.color.set(activeAirport==='sunset'?0xffc88b:0xfff2d6);
+  sun.intensity=activeAirport==='sunset'?3.2:2.7;
+  terrain.position.y=activeAirport==='sunset'?13.5:-.7;
+  grid.position.y=activeAirport==='sunset'?13.6:-.4;
+  // Saat video kamera menyala, tetap transparan. Simpan latar untuk mode 3D.
+  savedBackground=nextBackground;
+  savedFog=nextFog;
+  scene.background=cameraBackground?null:nextBackground;
+  scene.fog=cameraBackground?null:nextFog;
+  terrain.visible=!cameraBackground;
+  grid.visible=!cameraBackground;
   progress(57,'Memuat '+AIRCRAFT[activeAircraft].name+'...');
   const result=await loadGlb('./assets/'+AIRCRAFT[activeAircraft].file);
   planeModel=result.scene;
