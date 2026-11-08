@@ -1,0 +1,45 @@
+<!doctype html><html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><title>SKYPORT — Marker AR</title>
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;font-family:system-ui,Arial;color:#fff}#top{position:fixed;top:12px;left:12px;right:12px;z-index:20;border-radius:13px;padding:11px 14px;background:#0a2739d9;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}a{color:#eed19b;text-decoration:none}button{border:0;border-radius:10px;padding:12px;background:#d7a75c;color:#172637;font-weight:800}#hud{position:fixed;z-index:20;bottom:14px;left:12px;right:12px;display:flex;align-items:end;justify-content:space-between;pointer-events:none}#stick{width:128px;height:128px;border:2px solid #b4e7fc;border-radius:50%;background:#133e5d88;position:relative;touch-action:none;pointer-events:auto}#knob{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:55px;height:55px;background:#4db6dd;border:2px solid #d2f2fc;border-radius:50%}#panel{pointer-events:auto;display:flex;flex-direction:column;gap:8px;align-items:center;background:#102e40cb;border-radius:12px;padding:10px}#throttle{width:110px;accent-color:#f7ce81}#helper{position:fixed;top:74px;left:12px;right:12px;text-align:center;background:#0b2535c7;border-radius:10px;padding:9px;z-index:20;font-size:12px}#selection{position:fixed;z-index:25;top:64px;left:12px;right:12px;display:flex;gap:6px;justify-content:center;pointer-events:auto}#selection select{max-width:48%;border-radius:8px;padding:8px;background:#112c41;color:white;border:1px solid #91cbdd;font-size:11px}@media(max-width:550px){#helper{top:110px}#selection select{font-size:10px}} </style></head><body>
+<div id="top"><b>✈ SKYPORT — MARKER AR</b><span id="telemetry">0 km/j • 0 m</span><a href="index.html">Simulator 3D ↗</a></div><div id="selection"><select id="choosePlane"><option value="plane">Pesawat original</option><option value="fighter">KF-21A Boramae</option><option value="heli">AH-1W SuperCobra</option></select><select id="chooseAirport"><option value="classic">Airport Pack</option><option value="sunset">Sunshine Airport Sunset</option></select></div><div id="helper">Arahkan kamera ke gambar <b>airport-marker.png</b> yang sudah dikompilasi menjadi targets.mind.</div>
+<a-scene mindar-image="imageTargetSrc: ./markers/targets.mind; autoStart: true;" renderer="colorManagement: true; antialias: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+<a-assets></a-assets>
+<a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+<a-entity id="anchor" mindar-image-target="targetIndex: 0">
+<a-entity id="mini" scale="0.0018 0.0018 0.0018" position="0 0 0">
+<a-entity id="arAirport" gltf-model="./assets/airport_pack_total.glb" position="275 0 -43"></a-entity>
+<a-entity id="planeRoot" position="0 0 0"><a-entity id="planeFacing" rotation="0 0 0"><a-entity id="arAircraft" gltf-model="./assets/plane.glb"></a-entity></a-entity></a-entity>
+</a-entity></a-entity></a-scene>
+<div id="hud"><div id="stick"><div id="knob"></div></div><div id="panel"><span style="font-size:11px">THROTTLE <b id="percent">0%</b></span><input id="throttle" type="range" min="0" max="100" value="0"><button id="start">✈ TAKE OFF</button><button id="reset">↺ RESET</button></div></div>
+<script>
+(()=>{const $=id=>document.getElementById(id);const joy={x:0,y:0};let pid=null;const stick=$('stick');function update(e){const r=stick.getBoundingClientRect(),mx=r.left+r.width/2,my=r.top+r.height/2,R=r.width*.34;let x=(e.clientX-mx)/R,y=(e.clientY-my)/R,l=Math.max(1,Math.hypot(x,y));joy.x=x/l;joy.y=-y/l;$('knob').style.transform=`translate(calc(-50% + ${joy.x*R}px),calc(-50% - ${joy.y*R}px))`;}stick.addEventListener('pointerdown',e=>{e.preventDefault();pid=e.pointerId;stick.setPointerCapture(pid);update(e)});stick.addEventListener('pointermove',e=>{if(pid===e.pointerId)update(e)});const release=()=>{pid=null;joy.x=joy.y=0;$('knob').style.transform='translate(-50%,-50%)'};stick.addEventListener('pointerup',release);stick.addEventListener('pointercancel',release);
+const craft={plane:{url:'plane.glb',length:11.5},fighter:{url:'kf-21a_boramae_fighter_jet.glb',length:15},heli:{url:'ah-1w_supercobra_attack_helicopter.glb',length:17}};
+ const airports={classic:{url:'airport_pack_total.glb',x:-275,z:43,y:0},sunset:{url:'sunshine_airportsunset.glb',x:0,z:370,y:15}};
+ let selectedPlane='plane',selectedAirport='classic',rotorNodes=[];
+ const craftEl=$('arAircraft'),airportEl=$('arAirport');
+ const configureCraft=()=>{const model=craftEl.getObject3D('mesh');if(!model)return;const THREE=AFRAME.THREE;
+   const bbox=new THREE.Box3().setFromObject(model),center=bbox.getCenter(new THREE.Vector3()),size=bbox.getSize(new THREE.Vector3()),ratio=craft[selectedPlane].length/Math.max(size.x,size.z,.0001);
+   model.scale.setScalar(ratio);model.position.set(-center.x*ratio,-bbox.min.y*ratio,-center.z*ratio);
+   rotorNodes=[];
+   if(selectedPlane==='heli'){
+     // Baling-baling utama model 40/41. Transformasi grup mengikuti titik pusat rotor yang telah diskalakan.
+     const parts=[];model.traverse(o=>{if(o.isMesh&&/^mesh(40|41)\.dat/i.test(o.name))parts.push(o)});
+     if(parts.length){const pivot=new THREE.Group();pivot.position.set(0,.038,0);model.add(pivot);model.updateMatrixWorld(true);for(const o of parts)pivot.attach(o);rotorNodes.push({obj:pivot,axis:'y'})}
+     const tail=[];model.traverse(o=>{if(o.isMesh&&/^mesh(2[6-9]|3[0-7])\.dat/i.test(o.name))tail.push(o)});
+     if(tail.length){const pivot=new THREE.Group();pivot.position.set(-.006,.031,-.088);model.add(pivot);model.updateMatrixWorld(true);for(const o of tail)pivot.attach(o);rotorNodes.push({obj:pivot,axis:'x'})}
+   }
+ };
+ craftEl.addEventListener('model-loaded',configureCraft);
+ function swapAssets(){selectedPlane=$('choosePlane').value;selectedAirport=$('chooseAirport').value;rotorNodes=[];
+  craftEl.setAttribute('gltf-model','./assets/'+craft[selectedPlane].url);
+  airportEl.setAttribute('gltf-model','./assets/'+airports[selectedAirport].url);
+  airportEl.object3D.position.set(-airports[selectedAirport].x,-airports[selectedAirport].y,-airports[selectedAirport].z);
+  $('helper').textContent='Model diganti. Arahkan kamera kembali ke marker.';reset();
+ }
+ $('choosePlane').addEventListener('change',swapAssets);$('chooseAirport').addEventListener('change',swapAssets);
+ let s={x:0,y:0,z:0,speed:0,throttle:0,heading:0,vertical:0,flying:false,assist:false};const reset=()=>{s={x:0,y:0,z:0,speed:0,throttle:0,heading:0,vertical:0,flying:false,assist:false};$('throttle').value=0;$('percent').textContent='0%';};$('reset').onclick=reset;$('start').onclick=()=>{s.assist=true;s.throttle=1;$('throttle').value=100;$('percent').textContent='100%'};$('throttle').addEventListener('input',e=>{s.throttle=+e.target.value/100;s.assist=false;$('percent').textContent=e.target.value+'%'});
+const root=$('planeRoot');const mini=$('mini');let last=performance.now(),ready=false;const anchor=$('anchor');anchor.addEventListener('targetFound',()=>{$('helper').textContent='Marker ditemukan! Naikkan throttle lalu angkat hidung pesawat.';ready=true});anchor.addEventListener('targetLost',()=>{$('helper').textContent='Marker hilang. Arahkan kamera kembali ke kartu SKYPORT.';ready=false});
+function tick(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(ready){if(selectedPlane==='heli')for(const r of rotorNodes)r.obj.rotation[r.axis]+=(r.axis==='x'?-1:1)*(10+s.throttle*42)*dt;s.speed+=(s.throttle*100-s.speed)*Math.min(1,dt*.36);s.heading+=joy.x*dt*(s.flying?.26:.32);if(!s.flying&&((selectedPlane==='heli'&&s.throttle>.40&&(joy.y>.1||s.assist))||(selectedPlane!=='heli'&&s.speed>27&&(joy.y>.2||s.assist)))){s.flying=true;s.vertical=3;$('helper').textContent='Pesawat lepas landas! Joystick atas/bawah mengatur ketinggian.';}if(s.flying){const target=(s.assist&&s.y<15)?8:joy.y*10;s.vertical+=(target-s.vertical)*Math.min(1,dt*2);s.y=Math.max(0,s.y+s.vertical*dt);if(s.y===0){s.flying=false;s.assist=false;s.vertical=0;}}s.x+=Math.sin(s.heading)*s.speed*dt;s.z+=Math.cos(s.heading)*s.speed*dt;root.object3D.position.set(s.x,s.y,s.z);root.object3D.rotation.order='YXZ';root.object3D.rotation.y=s.heading;root.object3D.rotation.z=-joy.x*(s.flying?.25:.02);root.object3D.rotation.x=s.flying?-joy.y*.15:0;$('telemetry').textContent=`${Math.round(s.speed*3.6)} km/j • ${Math.round(s.y)} m`;}requestAnimationFrame(tick)}requestAnimationFrame(tick);
+})();
+</script></body></html>

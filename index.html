@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"><meta name="theme-color" content="#071522"><title>SKYPORT — Flight Simulator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+:root{font-family:Inter,system-ui,sans-serif;color:#e9f5ff;background:#071522}*{box-sizing:border-box}body{margin:0;overflow:hidden;touch-action:none}#viewport{position:fixed;inset:0}canvas{display:block}#overlay{position:fixed;inset:0;pointer-events:none}button,input{font:inherit}button{cursor:pointer}.top{position:absolute;left:20px;right:20px;top:18px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.brand{display:flex;gap:10px;align-items:center}.mark{width:36px;height:36px;border:1px solid #59b4d8;border-radius:11px;display:grid;place-items:center;background:#102e40;color:#79dff9;font-size:23px}.brand b{font:800 23px 'Barlow Condensed',sans-serif;letter-spacing:3px}.brand small{display:block;font-size:9px;letter-spacing:2px;color:#a2bfd0}.actions{display:flex;gap:8px;pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}.btn{border:1px solid #ffffff40;background:#102636cb;color:#eef9ff;padding:10px 13px;border-radius:10px;font-size:12px;font-weight:700;backdrop-filter:blur(10px)}.btn:hover{background:#24546b}.accent{background:#d6a65a;color:#1d2630;border-color:#ffd58e}.stats{position:absolute;top:91px;left:20px;display:flex;gap:9px;flex-wrap:wrap;max-width:73%}.stat{border:1px solid #ffffff25;border-radius:12px;background:#0a2533c7;padding:10px 14px;min-width:104px;backdrop-filter:blur(10px)}.stat em{display:block;font:600 10px Inter;color:#9ab5c6;font-style:normal;letter-spacing:1.2px}.stat b{display:block;font:700 25px 'Barlow Condensed';margin-top:3px;letter-spacing:1px}.stat span{font-size:11px;color:#bdd0dc}.msg{position:absolute;top:84px;right:20px;max-width:250px;text-align:right;font-size:12px;color:#e7f4ff;text-shadow:0 2px 8px #000;line-height:1.5}.bottom{position:absolute;bottom:24px;left:25px;right:25px;display:flex;align-items:end;justify-content:space-between;gap:20px}.panel{background:#0a2835c9;border:1px solid #ffffff2d;border-radius:16px;padding:14px;backdrop-filter:blur(10px);pointer-events:auto}.joystick-zone{position:relative;width:154px;height:154px;border-radius:50%;border:1px solid #88d3ec73;background:radial-gradient(circle,#30647a7d 0,#102e4266 61%,#16374d93 62%,#17344d93 100%);pointer-events:auto;touch-action:none;user-select:none}.joystick-zone:before,.joystick-zone:after{content:"";position:absolute;background:#85d4ed45}.joystick-zone:before{height:1px;top:50%;left:12px;right:12px}.joystick-zone:after{width:1px;left:50%;top:12px;bottom:12px}.knob{position:absolute;left:50%;top:50%;width:61px;height:61px;border-radius:50%;transform:translate(-50%,-50%);background:linear-gradient(150deg,#5fbfe3,#174a69);border:2px solid #a9e8ff;box-shadow:0 7px 18px #0008,0 0 22px #4dbee448;display:grid;place-items:center;color:#fff;font-size:23px}.control-label{text-align:center;letter-spacing:2px;color:#b5d3e2;font-size:10px;margin-top:10px}.right-controls{display:flex;align-items:end;gap:12px}.throttle{width:87px;min-height:214px;text-align:center}.throttle label{font-size:10px;letter-spacing:1.2px;color:#b9d3e0}.throttle strong{display:block;font:700 28px 'Barlow Condensed'}.throttle input{height:130px;width:28px;writing-mode:vertical-lr;direction:rtl;accent-color:#f6bd65;touch-action:none}.flight-buttons{display:flex;flex-direction:column;gap:8px}.flight-buttons .btn{min-width:112px}.flight-buttons .primary{background:linear-gradient(110deg,#f3c475,#d99031);color:#172a33;border:0}.hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#b5cbd8;font-size:10px;text-align:center;white-space:nowrap;pointer-events:none}.loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 20%,#183b52,#071522 65%);z-index:30;padding:22px}.loading .box{width:min(460px,100%);text-align:center}.loading h1{font:800 52px 'Barlow Condensed';letter-spacing:6px;margin:0;color:#fff}.loading p{font-size:13px;color:#a8c0ce;line-height:1.7}.bar{width:100%;height:6px;background:#254252;border-radius:9px;overflow:hidden;margin:22px 0}.bar>div{height:100%;width:2%;background:linear-gradient(90deg,#57bedc,#f2bd69);transition:width .25s}.loadnote{font-size:12px;color:#c0d6e2}.loading .btn{margin-top:20px}.hidden{display:none!important}.landed{color:#90d9ea}.flying{color:#ffe1a5}.error{color:#ffbab2}.mobile-guide{display:none}@media(max-width:680px){.top{left:12px;right:12px;top:12px}.brand b{font-size:18px}.mark{width:31px;height:31px}.brand small{font-size:7px}.btn{padding:8px 10px;font-size:11px}.stats{top:67px;left:10px;max-width:100%;gap:5px}.stat{min-width:75px;padding:7px 9px}.stat em{font-size:8px}.stat b{font-size:21px}.stat span{font-size:9px}.msg{top:145px;right:11px;font-size:10px;max-width:170px}.bottom{bottom:19px;left:12px;right:12px;gap:6px}.joystick-zone{height:124px;width:124px}.knob{width:52px;height:52px}.right-controls{gap:6px}.throttle{width:65px;min-height:156px;padding:8px 5px}.throttle input{height:97px}.throttle strong{font-size:21px}.flight-buttons .btn{min-width:81px;padding:10px 5px}.hint{display:none}.mobile-guide{display:block;position:absolute;top:185px;left:10px;max-width:175px;color:#b9d5e3;font-size:10px}}
+.picker-label{display:block;margin:17px 0 7px;font-size:10px;letter-spacing:2px;color:#a8c8da}.picker{display:block;width:100%;padding:14px 15px;background:#143b50;border:1px solid #6eb8d0;border-radius:12px;color:#fff;font-size:14px;outline:none}.picker:focus{border-color:#edc781}.loading .box{text-align:left}.loading .box h1{text-align:left}.loading .box p{line-height:1.6}@media(max-width:680px){.top{flex-wrap:wrap}.actions{width:100%;justify-content:flex-start;gap:4px}.actions .btn{font-size:9px;padding:6px 7px}.brand b{font-size:17px}.stats{top:108px}.msg{top:176px}.mobile-guide{top:224px}.loading .box h1{font-size:40px}}
+</style></head><body>
+<div id="viewport"></div>
+<div id="overlay"><header class="top"><div class="brand"><div class="mark">✈</div><div><b>SKYPORT</b><small>AIRPORT FLIGHT SIMULATOR</small></div></div><div class="actions"><button class="btn accent" id="chooseBtn">✈ Pilih Pesawat / Bandara</button><button class="btn" id="soundBtn" aria-pressed="false">🔇 Suara OFF</button><button class="btn" id="cameraBtn">🎥 Kamera</button><button class="btn" id="flipBtn">↻ Balik Pesawat</button><button class="btn" id="resetBtn">↻ Reset</button><a class="btn" href="ar.html" style="text-decoration:none">▣ Mode AR</a></div></header>
+<section class="stats"><div class="stat"><em>KECEPATAN</em><b id="speed">0 <span>km/j</span></b></div><div class="stat"><em>KETINGGIAN</em><b id="altitude">0 <span>m</span></b></div><div class="stat"><em>STATUS</em><b class="landed" id="status">PARKIR</b></div><div class="stat"><em>ARAH</em><b id="heading">000°</b></div></section><div class="msg" id="message">Naikkan throttle, arahkan joystick ke atas saat sudah cepat, lalu terbang!</div><div class="mobile-guide">Joystick: kiri/kanan membelok • atas: naik / angkat hidung • bawah: turun</div>
+<div class="bottom"><div><div class="joystick-zone" id="joy"><div class="knob" id="knob">✚</div></div><div class="control-label">FLIGHT STICK</div></div><div class="right-controls"><div class="panel throttle"><label>THROTTLE</label><strong id="throttleVal">0%</strong><input id="throttle" type="range" min="0" max="100" value="0" step="1" orient="vertical"></div><div class="flight-buttons"><button id="takeoffBtn" class="btn primary">✈ TAKE OFF</button><button id="brakeBtn" class="btn">⛔ REM</button><button id="downBtn" class="btn">↓ TURUN</button></div></div></div><div class="hint">PC: W/S = naik/turun • A/D = belok • ↑/↓ = throttle • C = kamera • R = reset</div></div>
+<div id="chooser" class="loading" style="z-index:40"><div class="box" style="text-align:left;max-width:580px"><div style="font-size:11px;letter-spacing:3px;color:#9ee6fa">PILIH SEBELUM TERBANG</div><h1 style="font-size:44px">SKYPORT</h1><p>Ganti pesawat dan lokasi bandara kapan saja. Helikopter memiliki rotor utama dan rotor ekor yang berputar.</p><label class="picker-label" for="aircraftSelect">KENDARAAN UDARA</label><select id="aircraftSelect" class="picker"><option value="plane">Pesawat original</option><option value="fighter">KF-21A Boramae — Jet Tempur</option><option value="heli">AH-1W SuperCobra — Helikopter</option></select><label class="picker-label" for="airportSelect">BANDARA</label><select id="airportSelect" class="picker"><option value="classic">Airport Pack — Bandara Original</option><option value="sunset">Sunshine Airport — Bandara Sunset</option></select><p id="selectionNote" style="min-height:25px">Pilih kendaraan dan bandara, lalu tekan Mulai.</p><button class="btn accent" id="startSelection" style="width:100%;font-size:15px;padding:15px">▶ MULAI SIMULATOR</button></div></div>
+<div id="loading" class="loading hidden"><div class="box"><h1>SKYPORT</h1><p>Jelajahi bandara dan terbangkan pesawat dari landasan. Versi simulasi 3D — kontrol penerbangan disederhanakan untuk tugas kuliah.</p><div class="bar"><div id="progress"></div></div><div id="loadnote" class="loadnote">Memuat bandara dan pesawat 3D...</div><button id="retry" class="btn hidden">Coba lagi</button></div></div>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/"}}</script><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const el=id=>document.getElementById(id), view=el('viewport'), msg=el('message');
+const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.2;view.appendChild(renderer.domElement);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x9bcbe6);scene.fog=new THREE.FogExp2(0x9bcbe6,.00065);const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,12000);camera.position.set(-270,13,42);
+scene.add(new THREE.HemisphereLight(0xf5f9ff,0x5e7a63,2.4));const sun=new THREE.DirectionalLight(0xfff2d6,2.7);sun.position.set(-140,360,-170);scene.add(sun);const terrain=new THREE.Mesh(new THREE.PlaneGeometry(12000,12000),new THREE.MeshStandardMaterial({color:0x567c60,roughness:1}));terrain.rotation.x=-Math.PI/2;terrain.position.y=-.7;scene.add(terrain);
+const grid=new THREE.GridHelper(2000,40,0xffffff,0xffffff);grid.material.transparent=true;grid.material.opacity=.025;grid.position.y=-.4;scene.add(grid);
+let planeModel,planePivot=new THREE.Group(),planeHolder=new THREE.Group(), modelLoaded=false, airportLoaded=false, airportGroup=null;
+const AIRCRAFT={plane:{file:'plane.glb',size:11.5,name:'Pesawat original'},fighter:{file:'kf-21a_boramae_fighter_jet.glb',size:15,name:'KF-21A Boramae'},heli:{file:'ah-1w_supercobra_attack_helicopter.glb',size:17,name:'AH-1W SuperCobra'}};
+const AIRPORTS={classic:{file:'airport_pack_total.glb',start:{x:-275,z:43,y:0,heading:0},name:'Airport Pack'},sunset:{file:'sunshine_airportsunset.glb',start:{x:0,z:370,y:15,heading:Math.PI},name:'Sunshine Airport'}};
+let activeAircraft='plane',activeAirport='classic',rotors=[],loadingBusy=false,selectedGround=0;scene.add(planeHolder);planeHolder.add(planePivot);
+const STATE={x:-275,z:43,y:0,heading:0,speed:0,throttle:0,vSpeed:0,pitch:0,bank:0,airborne:false,assisted:false,mode:0};
+// Engine audio is synthesised locally (no external sound asset required).
+// Browser audio starts only after the user enables it explicitly.
+const engineAudio={ctx:null,output:null,osc:[],noise:null,enabled:false};
+function initEngineAudio(){
+ if(engineAudio.ctx)return;
+ const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+ if(!AudioContextClass)throw new Error('Web Audio tidak didukung di browser ini');
+ const ctx=new AudioContextClass();
+ const output=ctx.createGain();output.gain.value=0;output.connect(ctx.destination);
+ const lowpass=ctx.createBiquadFilter();lowpass.type='lowpass';lowpass.frequency.value=500;lowpass.Q.value=.7;lowpass.connect(output);
+ // Layered low hum with subtle high harmonics to approximate a turbine engine.
+ for(const [type,freq,level] of [['sawtooth',58,.19],['triangle',116,.16],['sine',174,.08]]){
+  const osc=ctx.createOscillator();osc.type=type;osc.frequency.value=freq;
+  const gain=ctx.createGain();gain.gain.value=level;
+  osc.connect(gain).connect(lowpass);osc.start();engineAudio.osc.push({osc,base:freq});
+ }
+ // Airflow texture becomes more audible at higher engine power.
+ const len=Math.floor(ctx.sampleRate*1.5),buf=ctx.createBuffer(1,len,ctx.sampleRate),samples=buf.getChannelData(0);
+ for(let i=0;i<len;i++)samples[i]=Math.random()*2-1;
+ const noise=ctx.createBufferSource();noise.buffer=buf;noise.loop=true;
+ const hissFilter=ctx.createBiquadFilter();hissFilter.type='bandpass';hissFilter.frequency.value=760;hissFilter.Q.value=.35;
+ const hissGain=ctx.createGain();hissGain.gain.value=.008;
+ noise.connect(hissFilter).connect(hissGain).connect(output);noise.start();
+ engineAudio.ctx=ctx;engineAudio.output=output;engineAudio.filter=lowpass;engineAudio.hissGain=hissGain;
+}
+function updateEngineSound(){
+ if(!engineAudio.ctx)return;
+ const ctx=engineAudio.ctx,t=ctx.currentTime,power=STATE.throttle,speed=STATE.speed;
+ const volume=engineAudio.enabled?.055+power*.13+Math.min(speed/115,1)*.08:0;
+ engineAudio.output.gain.setTargetAtTime(Math.min(.26,volume),t,.12);
+ engineAudio.filter.frequency.setTargetAtTime(260+power*900+speed*5,t,.16);
+ engineAudio.hissGain.gain.setTargetAtTime(.004+power*.045+Math.min(speed/115,1)*.045,t,.18);
+ for(const {osc,base} of engineAudio.osc){osc.frequency.setTargetAtTime(base*(.76+power*1.3+Math.min(speed/115,1)*.3),t,.12)}
+}
+el('soundBtn').addEventListener('click',async()=>{
+ try{
+  initEngineAudio();await engineAudio.ctx.resume();engineAudio.enabled=!engineAudio.enabled;
+  el('soundBtn').textContent=engineAudio.enabled?'🔊 Suara ON':'🔇 Suara OFF';
+  el('soundBtn').setAttribute('aria-pressed',String(engineAudio.enabled));
+  updateEngineSound();
+  show(engineAudio.enabled?'Suara mesin aktif. Naikkan throttle untuk mendengar perubahan tenaga.':'Suara mesin dimatikan.');
+ }catch(err){console.error(err);show('Browser ini tidak mendukung suara mesin atau audio diblokir.');}
+});
+const joy={x:0,y:0}, keys=new Set();let braking=false,descending=false,last=performance.now(),elapsed=0;
+function show(m){msg.textContent=m}function loadGlb(path){return new Promise((resolve,reject)=>{new GLTFLoader().load(path,resolve,undefined,reject)})}
+function progress(p,s){el('progress').style.width=p+'%';el('loadnote').textContent=s}
+// Semua model diseragamkan ke panjang tampak yang wajar untuk simulator.
+function normalizePlane(g,kind){
+ const b=new THREE.Box3().setFromObject(g),c=b.getCenter(new THREE.Vector3()),size=b.getSize(new THREE.Vector3());
+ const scale=AIRCRAFT[kind].size/Math.max(size.x,size.z,0.001);
+ // Geometri helikopter dari sumber awal amat kecil; skala dinormalisasi saat dimuat.
+ if(kind==='heli') prepareRotors(g);
+ g.scale.setScalar(scale);
+ g.position.set(-c.x*scale,-b.min.y*scale,-c.z*scale);
+ planePivot.rotation.y=0;
+}
+function makeRotor(g,regex,center,axis){
+ g.updateMatrixWorld(true);
+ const pieces=[];
+ g.traverse(o=>{if(o.isMesh&&regex.test(o.name))pieces.push(o)});
+ if(!pieces.length)return null;
+ const pivot=new THREE.Group();pivot.position.copy(center);g.add(pivot);g.updateMatrixWorld(true);
+ for(const obj of pieces)pivot.attach(obj); // Mempertahankan posisi, rotasi, dan skala asli mesh
+ const record={pivot,axis};rotors.push(record);return record;
+}
+function prepareRotors(g){
+ rotors=[];
+ // Mesh rotor utama 40 & 41 membentuk dua bilah memanjang pada sumbu Y.
+ makeRotor(g,/^mesh(40|41)\.dat/i,new THREE.Vector3(0,.038,0),'y');
+ // Mesh rotor ekor, sumbu putar mendekati sumbu X pada ekor bagian belakang.
+ makeRotor(g,/^mesh(2[6-9]|3[0-7])\.dat/i,new THREE.Vector3(-.006,.031,-.088),'x');
+}
+function clearCurrent(){
+ if(airportGroup){scene.remove(airportGroup);airportGroup=null;}
+ if(planeModel){planePivot.remove(planeModel);planeModel=null;}
+ rotors=[];modelLoaded=false;airportLoaded=false;
+}
+async function applySelection(){
+ if(loadingBusy)return;loadingBusy=true;
+ activeAircraft=el('aircraftSelect').value;activeAirport=el('airportSelect').value;
+ el('chooser').classList.add('hidden');el('loading').classList.remove('hidden');
+ clearCurrent();
+ try{
+  progress(8,'Memuat bandara '+AIRPORTS[activeAirport].name+'...');
+  const airport=await loadGlb('./assets/'+AIRPORTS[activeAirport].file);
+  airportGroup=airport.scene;
+  airportGroup.traverse(o=>{if(o.isMesh){if(/COLLIDERS/i.test(o.name))o.visible=false;else{o.material.side=THREE.DoubleSide;o.frustumCulled=false;}}});
+  scene.add(airportGroup);airportLoaded=true;
+  if(activeAirport==='sunset'){
+    scene.background=new THREE.Color(0xf3b081);scene.fog.color.set(0xf3b081);
+    sun.color.set(0xffc88b);sun.intensity=3.2;
+    terrain.position.y=13.5;grid.position.y=13.6;
+  }else{
+    scene.background.set(0x9bcbe6);scene.fog.color.set(0x9bcbe6);
+    sun.color.set(0xfff2d6);sun.intensity=2.7;
+    terrain.position.y=-.7;grid.position.y=-.4;
+  }
+  progress(57,'Memuat '+AIRCRAFT[activeAircraft].name+'...');
+  const result=await loadGlb('./assets/'+AIRCRAFT[activeAircraft].file);
+  planeModel=result.scene;
+  normalizePlane(planeModel,activeAircraft);
+  planePivot.add(planeModel);
+  planeModel.traverse(o=>{if(o.isMesh){o.material.side=THREE.DoubleSide;o.frustumCulled=false;}});
+  modelLoaded=true;
+  reset();
+  el('loading').classList.add('hidden');
+  show('Siap: '+AIRCRAFT[activeAircraft].name+' di '+AIRPORTS[activeAirport].name+'. '+(activeAircraft==='heli'?'Naikkan throttle untuk lepas landas vertikal.':'Naikkan throttle untuk meluncur di landasan.'));
+ }catch(e){console.error(e);progress(100,'Gagal memuat aset: '+(e.message||e)+'. Periksa file GLB dan koneksi internet.');el('retry').classList.remove('hidden');}
+ finally{loadingBusy=false;}
+}
+el('startSelection').onclick=applySelection;
+el('chooseBtn').onclick=()=>{if(loadingBusy)return;el('chooser').classList.remove('hidden');show('Pilih pesawat dan bandara baru, lalu tekan MULAI SIMULATOR.');};
+el('retry').onclick=()=>location.reload();
+function reset(){const start=AIRPORTS[activeAirport].start;Object.assign(STATE,{...start,speed:0,throttle:0,vSpeed:0,pitch:0,bank:0,airborne:false,assisted:false});el('throttle').value=0;el('throttleVal').textContent='0%';planeHolder.position.set(STATE.x,STATE.y,STATE.z);planeHolder.rotation.set(0,0,0);show('Pesawat siap di landasan. Tekan TAKE OFF atau naikkan throttle.');}
+el('flipBtn').onclick=()=>{planePivot.rotation.y=(planePivot.rotation.y===0?Math.PI:0);show('Orientasi pesawat dibalik 180°. Coba gerakkan throttle untuk memeriksa arahnya.');};el('resetBtn').onclick=reset;el('cameraBtn').onclick=()=>{STATE.mode=(STATE.mode+1)%3;show(['Kamera: dari belakang','Kamera: kokpit','Kamera: jarak jauh'][STATE.mode]);};el('takeoffBtn').onclick=()=>{STATE.assisted=true;STATE.throttle=1;el('throttle').value=100;el('throttleVal').textContent='100%';show('Takeoff assist aktif: pesawat mulai melaju dan akan naik setelah cukup cepat.');};el('throttle').addEventListener('input',e=>{STATE.throttle=Number(e.target.value)/100;STATE.assisted=false;el('throttleVal').textContent=e.target.value+'%';});
+const brake=el('brakeBtn'),down=el('downBtn');for(let [node,set] of [[brake,v=>braking=v],[down,v=>descending=v]]){node.addEventListener('pointerdown',e=>{e.preventDefault();node.setPointerCapture(e.pointerId);set(true)});for(let k of ['pointerup','pointercancel','lostpointercapture'])node.addEventListener(k,()=>set(false));}
+const joyzone=el('joy');let joyPid=null;function setJoy(e){const r=joyzone.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,max=r.width*.34;let x=(e.clientX-cx)/max,y=(e.clientY-cy)/max;const n=Math.max(1,Math.hypot(x,y));joy.x=x/n;joy.y=-y/n;el('knob').style.transform=`translate(calc(-50% + ${joy.x*max}px),calc(-50% - ${joy.y*max}px))`;}joyzone.addEventListener('pointerdown',e=>{e.preventDefault();joyPid=e.pointerId;joyzone.setPointerCapture(e.pointerId);setJoy(e)});joyzone.addEventListener('pointermove',e=>{if(joyPid===e.pointerId)setJoy(e)});function releaseJoy(){joyPid=null;joy.x=joy.y=0;el('knob').style.transform='translate(-50%,-50%)'};joyzone.addEventListener('pointerup',releaseJoy);joyzone.addEventListener('pointercancel',releaseJoy);window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown',' ','ArrowLeft','ArrowRight'].includes(e.key))e.preventDefault();keys.add(e.code);if(e.code==='KeyR')reset();if(e.code==='KeyC')el('cameraBtn').click();if(e.code==='Space'&&!e.repeat)el('takeoffBtn').click()});window.addEventListener('keyup',e=>keys.delete(e.code));
+const clamp=THREE.MathUtils.clamp;let noticeCooldown=0;function physics(dt){let x=clamp(joy.x+(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0),-1,1),y=clamp(joy.y+(keys.has('KeyW')?1:0)-(keys.has('KeyS')?1:0),-1,1);if(keys.has('ArrowUp'))STATE.throttle=Math.min(1,STATE.throttle+dt*.35);if(keys.has('ArrowDown'))STATE.throttle=Math.max(0,STATE.throttle-dt*.35);el('throttle').value=Math.round(STATE.throttle*100);el('throttleVal').textContent=Math.round(STATE.throttle*100)+'%';const s=STATE;
+ const isHeli=activeAircraft==='heli';const maxSpeed=isHeli?(s.airborne?63:20):(s.airborne?115:72);const target=(isHeli&&!s.airborne)?Math.min(5,s.throttle*maxSpeed):s.throttle*maxSpeed;const accel=(target>s.speed?8.5:braking?25:3.5);s.speed+=(target-s.speed)*Math.min(1,dt*accel/Math.max(14,Math.abs(target-s.speed)+10));if(braking)s.speed=Math.max(0,s.speed-26*dt);if(s.throttle<.02&&!s.airborne)s.speed=Math.max(0,s.speed-3*dt);
+ // Joystick kanan = belok kanan dari perspektif pilot; kiri = kiri. Ground steering at lower speed.
+ s.heading-=x*dt*(s.airborne?.32:(.28+.1*Math.min(s.speed/22,1)));s.pitch=THREE.MathUtils.damp(s.pitch,s.airborne?((descending||keys.has('KeyS'))?-.22:y*.21):(y*.08),4,dt);s.bank=THREE.MathUtils.damp(s.bank,x*(s.airborne?.35:.045),3,dt);
+ if(!s.airborne&&((isHeli&&s.throttle>.42&&(y>.10||s.assisted))||(!isHeli&&s.speed>27&&(y>.24||s.assisted)))){s.airborne=true;s.vSpeed=isHeli?2:2.8;show(isHeli?'HELIKOPTER NAIK! Joystick atas untuk naik, bawah untuk turun.':'LEPAS LANDAS! Gerakkan joystick ke atas untuk menanjak dan ke kiri/kanan untuk berbelok.');}
+ if(s.airborne){const climb=s.assisted&&(s.y-AIRPORTS[activeAirport].start.y)<16?8:(isHeli?clamp((s.throttle-.40)*12+y*8-(descending?12:0),-11,12):clamp(y*11+(s.speed>23?1.3:-8)-(descending?12:0),-14,15));s.vSpeed=THREE.MathUtils.damp(s.vSpeed,climb,1.4,dt);const floor=AIRPORTS[activeAirport].start.y;s.y=Math.max(floor,s.y+s.vSpeed*dt);if(s.y<=floor){s.y=floor;s.airborne=false;s.vSpeed=0;s.assisted=false;show(s.speed>65?'Mendarat dengan cepat! Tekan REM.':'Pesawat mendarat. Kurangi throttle untuk berhenti.');}}
+ s.x+=Math.sin(s.heading)*s.speed*dt;s.z+=Math.cos(s.heading)*s.speed*dt;if(!s.airborne&&activeAirport==='classic'&&(s.x < -480 || s.x > -80 || s.z<-580||s.z>620)){s.speed=Math.min(s.speed,5);if(noticeCooldown<=0){show('Kamu keluar dari area bandara. Tekan Reset untuk kembali ke landasan.');noticeCooldown=3;}}noticeCooldown=Math.max(0,noticeCooldown-dt);
+ planeHolder.position.set(s.x,s.y,s.z);planeHolder.rotation.order='YXZ';planeHolder.rotation.y=s.heading;planeHolder.rotation.x=-s.pitch;planeHolder.rotation.z=s.bank;
+ if(activeAircraft==='heli'){const rpm=8+s.throttle*42+(s.airborne?20:0);for(const r of rotors){r.pivot.rotation[r.axis]+=rpm*dt*(r.axis==='x'?-1:1);}}
+ el('speed').innerHTML=Math.round(s.speed*3.6)+' <span>km/j</span>';el('altitude').innerHTML=Math.max(0,Math.round(s.y-AIRPORTS[activeAirport].start.y))+' <span>m</span>';el('heading').textContent=((Math.round(s.heading*180/Math.PI)%360+360)%360).toString().padStart(3,'0')+'°';const status=el('status');status.textContent=s.airborne?'TERBANG':s.speed>2?'TAXI / RUNWAY':'PARKIR';status.className=s.airborne?'flying':'landed';}
+const look=new THREE.Vector3(),targetCam=new THREE.Vector3(),forward=new THREE.Vector3();function follow(dt){const s=STATE;forward.set(Math.sin(s.heading),0,Math.cos(s.heading));if(s.mode===0){targetCam.set(s.x-forward.x*24,s.y+9,s.z-forward.z*24);}else if(s.mode===1){targetCam.set(s.x+forward.x*1.8,s.y+2.6,s.z+forward.z*1.8);}else{targetCam.set(s.x-forward.x*68+27,s.y+32,s.z-forward.z*68+27);}camera.position.lerp(targetCam,1-Math.exp(-dt*2.6));look.set(s.x+forward.x*15,s.y+2+Math.max(0,s.pitch)*9,s.z+forward.z*15);camera.lookAt(look);}
+function tick(now){const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;if(modelLoaded&&airportLoaded){physics(dt);follow(dt);updateEngineSound();}renderer.render(scene,camera);requestAnimationFrame(tick)}window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)});requestAnimationFrame(tick);
+</script></body></html>
